@@ -1,6 +1,4 @@
 from django.db import models
-from institute.models import SubOrganization
-from user.models import Member, Professor
 
 EVENT_TYPES = [
     ('A', 'Asamblea'),
@@ -28,9 +26,9 @@ class Event(models.Model):
     event_type = models.CharField(max_length=2, choices=EVENT_TYPES)
     date_start = models.DateTimeField(auto_now=False)
     date_end = models.DateTimeField(auto_now=False)
-    id_organizer = models.ForeignKey(Member, on_delete=models.CASCADE) 
-    id_suborg_in_charge = models.ForeignKey(SubOrganization, on_delete=models.CASCADE) 
-    id_professor = models.ForeignKey(Professor, on_delete=models.CASCADE, blank=True, null=True) 
+    id_organizer = models.ForeignKey('user.Member', on_delete=models.CASCADE) 
+    id_suborg_in_charge = models.ForeignKey('institution.SubOrganization', on_delete=models.CASCADE) 
+    id_professor = models.ForeignKey('user.Professor', on_delete=models.CASCADE, blank=True, null=True) 
 
     def __str__(self):
         return self.name
@@ -39,9 +37,9 @@ class Document(models.Model):
     document_id = models.CharField(max_length=10, primary_key=True) 
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
-    doc_type = models.CharField(max_length=1, choices=DOC_TYPES)
-    id_writer = models.OneToOneField(Member, on_delete=models.CASCADE)
-    id_event = models.OneToOneField(Event, on_delete=models.CASCADE, blank=True, null=True) 
+    doc_type = models.CharField(max_length=2, choices=DOC_TYPES)
+    id_writer = models.OneToOneField('user.Member', on_delete=models.CASCADE)
+    id_event = models.OneToOneField('Event', on_delete=models.CASCADE, blank=True, null=True) 
     
     def __str__(self):
         return self.name

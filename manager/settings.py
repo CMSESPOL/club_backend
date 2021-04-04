@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api.apps.ApiConfig',
     'event.apps.EventConfig',
-    'institute.apps.InstituteConfig',
+    'institution.apps.InstitutionConfig',
     'user.apps.UserConfig',
 ]
 
@@ -72,6 +72,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'user.Member'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

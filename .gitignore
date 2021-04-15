@@ -129,4 +129,3 @@ dmypy.json
 .pyre/
 
 .sqlite3
-migrations/

@@ -74,6 +74,7 @@ class Member(AbstractUser):
     role = models.CharField(max_length=2, choices=ROLES, default='F')
     permissions = models.CharField(max_length=2, choices=PERMISSIONS, default='N')
     ambassador = models.URLField(max_length=300, null=True, unique=True, validators=[ambassador_valid_url])
+    social_links = models.JSONField(null=True)
     id_sub_org = models.ForeignKey('institution.SubOrganization', on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:

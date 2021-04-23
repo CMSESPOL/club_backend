@@ -71,7 +71,7 @@ class Member(AbstractUser):
     id_student = models.OneToOneField('Student', on_delete=models.CASCADE, blank=True, null=True)
     description = models.CharField(max_length=100)
     date_joined = models.DateField(auto_now=True)
-    role = models.CharField(max_length=2, choices=ROLES, default='F')
+    actual_role = models.OneToOneField('Role', on_delete=models.CASCADE, null=True)
     permissions = models.CharField(max_length=2, choices=PERMISSIONS, default='N')
     ambassador = models.URLField(max_length=300, null=True, unique=True, validators=[ambassador_valid_url])
     social_links = models.JSONField(null=True)
@@ -85,3 +85,13 @@ class Member(AbstractUser):
         if self.id_student:
             return f"{self.id_student.id_person.get_full_name}"
         return f"{self.username}"
+
+class Role(models.Model):
+    name = models.CharField(max_length=2, choices=ROLES, default='F')
+    id_miembro = models.ForeignKey('Member', on_delete=models.CASCADE, blank=True, null=True)
+    date_start = models.DateTimeField(auto_now=False)
+    date_end = models.DateTimeField(auto_now=False)
+
+    def __str__(self):
+        return f"{self.id_miembro} {self.name}"
+

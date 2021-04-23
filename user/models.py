@@ -21,16 +21,16 @@ LEVELS = [
 ]
 
 ROLES = [
-    ('A', 'Presidente'),
-    ('B', 'Vicepresidente'),
-    ('C', 'Secretario'),
-    ('D', 'Tesorero'),
-    ('E', 'Vocal'),
-    ('F', 'Miembro'),
+    ('P', 'Presidente'),
+    ('V', 'Vicepresidente'),
+    ('S', 'Secretario'),
+    ('T', 'Tesorero'),
+    ('V', 'Vocal'),
+    ('M', 'Miembro'),
     ('N', 'Ninguno'),
-    ('X', 'Asesor'),
-    ('Y', 'Tutor'),
-    ('Z', 'Externo')
+    ('A', 'Asesor'),
+    ('T', 'Tutor'),
+    ('E', 'Externo')
 ]
 
 PERMISSIONS = [
@@ -88,7 +88,7 @@ class Member(AbstractUser):
 
 class MemberRole(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=2, choices=ROLES, default='F')
+    name = models.CharField(max_length=2, choices=ROLES, default='M')
     id_member = models.ForeignKey('Member', on_delete=models.CASCADE, blank=True, null=True)
     date_start = models.DateTimeField(auto_now=False)
     date_end = models.DateTimeField(auto_now=False)

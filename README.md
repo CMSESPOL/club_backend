@@ -8,7 +8,6 @@ Se necesita un entorno virtual, en el caso de contar con más de una versión de
 python -m venv <env-name>
 ```
 Activar dicho entorno creado:
-
 ### Windows
 ```
 <env-name>\Scripts\activate
@@ -27,10 +26,12 @@ Las dependencias están reunidas en el archivo [requirements](requirements.txt),
 (<env-name>) pip install -r requirements.txt
 ```
 ## Migraciones
-Las migraciones corresponden a la creación de la base de datos trabajada con *PostgreSQL* y se debe ejecutar:
+Las migraciones corresponden a la creación de la base de datos trabajada con *PostgreSQL 11* y se debe ejecutar:
 ```
 (<env-name>) python manage.py migrate
 ```
+## Configuración final
+Las indicaciones son brindadas por el líder de proyecto.
 ## Despliegue
 **Finalmente** se puede desplegar el proyecto: 
 ```
@@ -42,4 +43,5 @@ Kenny Camba
 Jeffrey Prado
 Rogwi Cajas
 Carlos Moncayo
+Cesar Vera
 ```

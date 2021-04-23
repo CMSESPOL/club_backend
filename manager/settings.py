@@ -66,6 +66,9 @@ DATABASES = {
         'NAME': '<db-name>',
         'USER': '<db-user>',                     
         'PASSWORD': '<password>',
+        'OPTIONS': {
+            'ssl': {'ca': '.pem'}
+        }
     }
 }
 

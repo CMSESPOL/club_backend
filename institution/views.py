@@ -3,6 +3,7 @@ from rest_framework import permissions
 from rest_framework import viewsets
 from .models import *
 from .serializers import *
+
 class FacultyViewSet(viewsets.ModelViewSet):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer

@@ -5,13 +5,19 @@
 
 from pathlib import Path
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = ''
 
-DEBUG = True
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-ALLOWED_HOSTS = []
+DEBUG = os.getenv('DEBUG')
+
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOST')]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,14 +67,19 @@ WSGI_APPLICATION = 'manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST': '<db-hostname>',                     
-        'PORT': '<db-port>',
-        'NAME': '<db-name>',
-        'USER': '<db-user>',                     
-        'PASSWORD': '<password>',
-        'OPTIONS': {
-            'ssl': {'ca': '.pem'}
-        }
+        'HOST': os.getenv('DB_LOCAL_HOST'),                     
+        'PORT': os.getenv('DB_LOCAL_PORT'),
+        'NAME': os.getenv('DB_LOCAL_NAME'),
+        'USER': os.getenv('DB_LOCAL_USER'),                     
+        'PASSWORD': os.getenv('DB_LOCAL_PASSWORD')
+    },
+    os.getenv('DB_PROD_SV'): {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': os.getenv('DB_PROD_HOST'),                     
+        'PORT': os.getenv('DB_PROD_PORT'),
+        'NAME': os.getenv('DB_PROD_NAME'),
+        'USER': os.getenv('DB_PROD_USER'),                     
+        'PASSWORD': os.getenv('DB_PROD_PASSWORD')
     }
 }
 

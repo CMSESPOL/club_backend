@@ -29,6 +29,7 @@ class Event(models.Model):
     id_organizer = models.ForeignKey('user.Member', on_delete=models.CASCADE) 
     id_suborg_in_charge = models.ForeignKey('institution.SubOrganization', on_delete=models.CASCADE) 
     id_professor = models.ForeignKey('user.Professor', on_delete=models.CASCADE, blank=True, null=True) 
+    observations = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.name

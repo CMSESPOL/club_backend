@@ -26,10 +26,11 @@ class Event(models.Model):
     event_type = models.CharField(max_length=2, choices=EVENT_TYPES)
     date_start = models.DateTimeField(auto_now=False)
     date_end = models.DateTimeField(auto_now=False)
+    observations = models.CharField(max_length=100, null=True)
+    link = models.URLField(default='NO LINK')
     id_organizer = models.ForeignKey('user.Member', on_delete=models.CASCADE) 
     id_suborg_in_charge = models.ForeignKey('institution.SubOrganization', on_delete=models.CASCADE) 
     id_professor = models.ForeignKey('user.Professor', on_delete=models.CASCADE, blank=True, null=True) 
-    observations = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.name

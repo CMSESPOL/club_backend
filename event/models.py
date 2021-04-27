@@ -28,6 +28,7 @@ class Event(models.Model):
     date_end = models.DateTimeField(auto_now=False)
     observations = models.CharField(max_length=100, null=True)
     link = models.URLField(default='NO LINK')
+    participants = models.JSONField(default=[])
     id_organizer = models.ForeignKey('user.Member', on_delete=models.CASCADE) 
     id_suborg_in_charge = models.ForeignKey('institution.SubOrganization', on_delete=models.CASCADE) 
     id_professor = models.ForeignKey('user.Professor', on_delete=models.CASCADE, blank=True, null=True) 

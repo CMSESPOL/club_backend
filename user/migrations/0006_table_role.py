@@ -29,6 +29,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='member',
             name='actual_role',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, to='user.memberrole'),
+            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='user.memberrole'),
         ),
     ]

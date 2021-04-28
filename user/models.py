@@ -71,7 +71,7 @@ class Member(AbstractUser):
     id_student = models.OneToOneField('Student', on_delete=models.CASCADE, blank=True, null=True)
     description = models.CharField(max_length=100)
     date_joined = models.DateField(auto_now=True)
-    actual_role = models.OneToOneField('MemberRole', on_delete=models.CASCADE, null=True)
+    actual_role = models.OneToOneField('MemberRole', on_delete=models.CASCADE, blank=True, null=True)
     permissions = models.CharField(max_length=2, choices=PERMISSIONS, default='N')
     ambassador = models.URLField(max_length=300, blank=True, null=True, unique=True, validators=[ambassador_valid_url])
     social_links = models.JSONField(blank=True, null=True)

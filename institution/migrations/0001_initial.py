@@ -25,7 +25,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Organization',
             fields=[
-                ('name', models.CharField(max_length=38, primary_key=True, serialize=False)),
+                ('abbreviation', models.CharField(default='NONAME', max_length=10, primary_key=True, serialize=False)),
+                ('name', models.CharField(max_length=38)),
                 ('description', models.CharField(max_length=100)),
             ],
         ),

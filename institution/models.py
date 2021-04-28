@@ -18,12 +18,12 @@ class Career(models.Model):
         return self.name
 
 class Organization(models.Model):
-    name = models.CharField(max_length=38, primary_key=True)
+    abbreviation = models.CharField(max_length=10, primary_key=True)
     description = models.CharField(max_length=100)
     id_tutor = models.OneToOneField('user.Professor', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.abbreviation
 
 class SubOrganization(models.Model):
     sub_org_id = models.IntegerField(primary_key=True)

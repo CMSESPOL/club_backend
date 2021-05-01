@@ -14,16 +14,16 @@ class ProfessorSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ['enrollment_id', 'level', 'id_person']
+        fields = ['enrollment_id', 'id_faculty', 'id_career', 'level', 'id_person']
 
 
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ['description', 'date_joined', 'permissions', 'active']
+        fields = ['id_student', 'username', 'description', 'date_joined', 'permissions', 'active', 'id_sub_org']
 
 
 class MemberRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = MemberRole
-        fields = ['id', 'name', 'date_start', 'date_end']
+        fields = ['id', 'name', 'id_member', 'date_start', 'date_end']

@@ -14,9 +14,9 @@ class CareerSerializer(serializers.ModelSerializer):
 class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
-        fields = ['name']
+        fields = ['abbreviation', 'name', 'description']
 
 class SubOrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubOrganization
-        fields = ['name']
+        fields = ['name', 'description', 'id_organization']

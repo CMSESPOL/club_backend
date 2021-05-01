@@ -1,21 +1,15 @@
-from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
 from institution.views import *
 from user.views import *
-
-router = routers.DefaultRouter()
-router.register(r'facultades', FacultyViewSet)
-router.register(r'carreras', CareerViewSet)
-router.register(r'organizacion', OrganizationViewSet)
-router.register(r'suborganizacion', SubOrganizationViewSet)
-router.register(r'persona', PersonViewSet)
-router.register(r'profesor', ProfessorViewSet)
-router.register(r'estudiante', StudentViewSet)
-router.register(r'miembro', MemberViewSet)
-router.register(r'rol de miembro', MemberRoleViewSet)
-
+from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
-    path('', include(router.urls)),
+    # path('', include(router.urls)),
+    # path('/', .as_view()),
+    path('facultad/', FacultyList.as_view()),
+    path('carrera/', CareerList.as_view()),
+    path('organizacion/', OrganizationList.as_view()),
+    path('suborganizacion/', SubOrganizationList.as_view()),
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

@@ -13,6 +13,11 @@ urlpatterns = [
     path('carrera/', CareerList.as_view()),
     path('organizacion/', OrganizationList.as_view()),
     path('suborganizacion/', SubOrganizationList.as_view()),
+    path('persona/', PersonList.as_view()),
+    path('profesor/', ProfessorList.as_view()),
+    path('estudiante/', StudentList.as_view()),
+    path('miembro/', MemberList.as_view()),
+    path('rol/', MemberRoleList.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

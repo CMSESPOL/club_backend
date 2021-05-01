@@ -30,7 +30,8 @@ ROLES = [
     ('N', 'Ninguno'),
     ('A', 'Asesor'),
     ('T', 'Tutor'),
-    ('E', 'Externo')
+    ('E', 'Externo'),
+    ('C', 'Candidato Aspirante'),
 ]
 
 PERMISSIONS = [
@@ -40,6 +41,7 @@ PERMISSIONS = [
     ('D', 'Miembro'),
     ('N', 'Ninguno')
 ]
+
 class Person(models.Model):
     card_id = models.CharField(max_length=10, primary_key=True)
     born_date = models.DateField(auto_now=False)
@@ -72,9 +74,9 @@ class Member(AbstractUser):
     description = models.CharField(max_length=100)
     date_joined = models.DateField(auto_now=True)
     actual_role = models.OneToOneField('MemberRole', on_delete=models.CASCADE, blank=True, null=True)
-    permissions = models.CharField(max_length=2, choices=PERMISSIONS, default='N')
+    permissions = models.CharField(max_length=1, choices=PERMISSIONS, default='N')
     ambassador = models.URLField(max_length=300, blank=True, null=True, unique=True, validators=[ambassador_valid_url])
-    social_links = models.JSONField(blank=True, null=True)
+    social_links = models.JSONField(default=dict, blank=True, null=True)
     active = models.BooleanField(default=True)
     id_sub_org = models.ForeignKey('institution.SubOrganization', on_delete=models.CASCADE, blank=True, null=True)
 
@@ -82,13 +84,11 @@ class Member(AbstractUser):
         verbose_name_plural = "Members"
 
     def __str__(self):
-        # if self.id_student:
-        #     return f"{self.get_full_name}"
         return f"{self.username}"
 
 class MemberRole(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=2, choices=ROLES, default='M')
+    name = models.CharField(max_length=1, choices=ROLES, default='M')
     id_member = models.ForeignKey('Member', on_delete=models.CASCADE, blank=True, null=True)
     date_start = models.DateTimeField(auto_now=False)
     date_end = models.DateTimeField(auto_now=False)
@@ -101,10 +101,9 @@ class MemberRole(models.Model):
             member = Member.objects.get(id=self.id_member.id)
             if member:
                 member.actual_role = self
+                super().save(*args, **kwargs)
                 member.save()
             else: 
                 raise Exception("Error al tratar de asignar el rol actual.")
-            super().save(*args, **kwargs)
         except Exception as e:
             return f"{e}"
-            

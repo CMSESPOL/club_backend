@@ -9,18 +9,18 @@ class PersonSerializer(serializers.ModelSerializer):
 class ProfessorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professor
-        fields = ['id_person']
+        fields = ['id_person', 'person']
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ['enrollment_id', 'id_faculty', 'id_career', 'level', 'id_person']
+        fields = ['enrollment_id', 'id_faculty', 'id_career', 'level', 'person']
 
 
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ['id_student', 'username', 'description', 'date_joined', 'permissions', 'active', 'id_sub_org']
+        fields = ['first_name', 'last_name', 'student', 'description', 'date_joined', 'actual_role', 'permissions', 'active', 'id_sub_org']
 
 
 class MemberRoleSerializer(serializers.ModelSerializer):

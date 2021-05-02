@@ -58,6 +58,11 @@ class Professor(models.Model):
     def __str__(self):
         return f"{self.id_person}"
 
+    @property
+    def person(self):
+        from .serializers import PersonSerializer
+        return PersonSerializer(self.id_person).data
+
 class Student(models.Model):
     enrollment_id = models.CharField(max_length=9, primary_key=True)
     id_faculty = models.OneToOneField('institution.Faculty', on_delete=models.CASCADE, null=True)
@@ -68,10 +73,15 @@ class Student(models.Model):
 
     def __str__(self):
         return f"{self.enrollment_id}"
+
+    @property
+    def person(self):
+        from .serializers import PersonSerializer
+        return PersonSerializer(self.id_person).data
     
 class Member(AbstractUser):
     id_student = models.OneToOneField('Student', on_delete=models.CASCADE, blank=True, null=True)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, blank=True, null=True)
     date_joined = models.DateField(auto_now=True)
     actual_role = models.OneToOneField('MemberRole', on_delete=models.CASCADE, blank=True, null=True)
     permissions = models.CharField(max_length=1, choices=PERMISSIONS, default='N')
@@ -85,6 +95,11 @@ class Member(AbstractUser):
 
     def __str__(self):
         return f"{self.username}"
+
+    @property
+    def student(self):
+        from .serializers import StudentSerializer
+        return StudentSerializer(self.id_student).data
 
 class MemberRole(models.Model):
     id = models.AutoField(primary_key=True)

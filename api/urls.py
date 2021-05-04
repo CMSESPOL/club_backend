@@ -18,6 +18,8 @@ urlpatterns = [
     path('estudiante/', StudentList.as_view()),
     path('miembro/', MemberList.as_view()),
     path('rol/', MemberRoleList.as_view()),
+    path('auth/login/', AuthToken.as_view()),
+    path('auth/login/web/', AuthCookie.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

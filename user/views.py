@@ -1,11 +1,16 @@
+from user.auth.services import AuthService
 from django.shortcuts import render
 from .models import *
 from .serializers import *
+from django.contrib.auth import login
 
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status
+
+
+auth_service = AuthService()
 
 class PersonList(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -81,3 +86,18 @@ class MemberRoleList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AuthToken(APIView):
+
+    def post(self, request):
+        user = auth_service.get_user_by_credentials(request.data)
+        return Response(data=auth_service.generate_auth_token(user)) 
+
+class AuthCookie(APIView):
+
+    def post(self, request):
+        user = auth_service.get_user_by_credentials(request.data)
+        data = auth_service.generate_auth_token(user) 
+        login(request, user)
+        return Response(data=data["user"])

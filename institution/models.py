@@ -20,7 +20,7 @@ class Career(models.Model):
 class Organization(models.Model):
     abbreviation = models.CharField(max_length=10,primary_key=True)
     name = models.CharField(max_length=38)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=500)
     id_tutor = models.OneToOneField('user.Professor', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):

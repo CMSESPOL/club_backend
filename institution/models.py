@@ -21,6 +21,10 @@ class Organization(models.Model):
     abbreviation = models.CharField(max_length=10,primary_key=True)
     name = models.CharField(max_length=38)
     description = models.CharField(max_length=500)
+    mision = models.CharField(max_length = 500)
+    vision = models.CharField(max_length= 500)
+    banner = models.JSONField(default=dict())
+    galeria = models.JSONField(default=dict())
     id_tutor = models.OneToOneField('user.Professor', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):

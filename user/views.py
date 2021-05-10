@@ -1,8 +1,11 @@
+from rest_framework.authentication import SessionAuthentication
+from user.services import PersonService
 from user.auth.services import AuthService
 from django.shortcuts import render
 from .models import *
 from .serializers import *
 from django.contrib.auth import login
+from user.auth.BearerAuthentication import BearerAuthentication
 
 from rest_framework.views import APIView
 from rest_framework import permissions
@@ -101,3 +104,18 @@ class AuthCookie(APIView):
         data = auth_service.generate_auth_token(user) 
         login(request, user)
         return Response(data=data["user"])
+
+class PersonView(APIView):
+
+    # permission_classes = [permissions.IsAuthenticated]
+
+    person_service = PersonService()
+
+    def post(self, request):
+        return Response(data=self.person_service.create(request.data))
+    
+    def put(self, request):
+        return Response(data=self.person_service.update(request.data))
+    
+    def delete(self, request):
+        return Response(data=self.person_service.delete(request.data))

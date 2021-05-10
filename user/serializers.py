@@ -37,7 +37,7 @@ class MemberRoleSerializer(serializers.ModelSerializer):
 
 class PersonManagerSerializer(serializers.ModelSerializer):
 
-    signature = serializers.CharField(required=True, max_length=100)
+    signature = serializers.CharField(required=False, max_length=100)
 
     class Meta:
         model = Person
@@ -62,10 +62,11 @@ class PersonManagerSerializer(serializers.ModelSerializer):
         return instance
 
 
-class ProfessorManagerSerializer():
+class ProfessorManagerSerializer(serializers.ModelSerializer):
 
     id_faculty = serializers.CharField(
         max_length=6, source="id_faculty.acronym")
+    id_person = PersonManagerSerializer()
 
     class Meta:
         model = Professor
@@ -78,10 +79,9 @@ class ProfessorManagerSerializer():
         person = PersonManagerSerializer(data=validated_data.get("id_person"))
         if person.is_valid(raise_exception=True):
             person = person.save()
-        validated_data["id_faculty"] = Faculty(
-            acronym=validated_data.get("id_faculty"))
-        validated_data["id_person"] = person
-        professor = Professor(**validated_data)
+        faculty = Faculty(acronym=validated_data.get(
+            "id_faculty", {}).get("acronym"))
+        professor = Professor(id_person=person, id_faculty=faculty)
         try:
             professor.save()
         except:
@@ -126,9 +126,9 @@ class StudentManagerSerializer(serializers.ModelSerializer):
             person = person.save()
         validated_data["id_person"] = person
         validated_data["id_faculty"] = Faculty(
-            acronym=validated_data.get("id_faculty"))
+            acronym=validated_data.get("id_faculty", {}).get("acronym"))
         validated_data["id_career"] = Career(
-            name=validated_data.get("id_career"))
+            name=validated_data.get("id_career", {}).get("name"))
         student = Student(**validated_data)
         try:
             student.save()
@@ -145,10 +145,10 @@ class StudentManagerSerializer(serializers.ModelSerializer):
             person.save()
         instance.enrollment_id = validated_data.get(
             "enrollment_id", instance.enrollment_id)
-        faculty = validated_data.get("id_faculty")
+        faculty = validated_data.get("id_faculty", {}).get("acronym")
         if faculty:
             instance.id_faculty = Faculty(acronym=faculty)
-        career = validated_data.get("id_career")
+        career = validated_data.get("id_career", {}).get("name")
         if career:
             instance.id_career = Career(name=career)
         instance.level = validated_data.get("level", instance.level)
@@ -161,7 +161,7 @@ class MemberManagerSerializer(serializers.ModelSerializer):
 
     id_student = StudentManagerSerializer()
     ambassador = serializers.URLField(
-        requred=False, validators=[ambassador_valid_url])
+        required=False, validators=[ambassador_valid_url])
     social_links = serializers.JSONField(required=False)
     id_sub_org = serializers.IntegerField(
         source="id_sub_org.sub_org_id", write_only=True)

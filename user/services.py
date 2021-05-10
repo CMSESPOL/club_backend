@@ -12,7 +12,7 @@ class PersonService:
         role = data.get("role")
         if not role:
             raise exceptions.ValidationError(detail="Role is required")
-        
+
         if role not in self.roles:
             raise exceptions.ValidationError(detail="Role don't exist")
         if role == 'E':
@@ -34,9 +34,9 @@ class PersonService:
                 return StudentSerializer(student).data
 
         raise exceptions.ValidationError(detail="This action is not allowed")
-    
+
     def update(self, data: dict):
-        id = data.pop("id")
+        id = data.pop("id", None)
         if not id:
             raise exceptions.ValidationError(detail="Id is required")
         role = data.get("role")
@@ -50,7 +50,8 @@ class PersonService:
             try:
                 person = Person.objects.get(card_id=id)
             except Person.DoesNotExist:
-                raise exceptions.ValidationError(detail=f"Person with id {id} don't exist")
+                raise exceptions.ValidationError(
+                    detail=f"Person with id {id} don't exist")
             serializer = PersonManagerSerializer(person, data=data)
             if serializer.is_valid(raise_exception=True):
                 person = serializer.save()
@@ -61,7 +62,8 @@ class PersonService:
             try:
                 professor = Professor.objects.get(pk=id)
             except Professor.DoesNotExist:
-                raise exceptions.ValidationError(detail=f"Professor with id {id} don't exist")
+                raise exceptions.ValidationError(
+                    detail=f"Professor with id {id} don't exist")
             serializer = ProfessorManagerSerializer(professor, data=data)
             if serializer.is_valid(raise_exception=True):
                 professor = serializer.save()
@@ -79,7 +81,7 @@ class PersonService:
                 return StudentSerializer(student).data
         raise exceptions.ValidationError(detail="This action is not allowed")
 
-    def delete(self, data:dict):
+    def delete(self, data: dict):
         id = data.pop("id")
         if not id:
             raise exceptions.ValidationError(detail="Id is required")
@@ -96,7 +98,7 @@ class PersonService:
                 raise exceptions.ValidationError(
                     detail=f"Person with id {id} don't exist")
             person.delete()
-           
+
         elif role == 'T':
             try:
                 professor = Professor.objects.get(pk=id)
@@ -112,5 +114,4 @@ class PersonService:
                 raise exceptions.ValidationError(
                     detail=f"Student with id {id} don't exist")
             student.delete()
-        return {"status": "ok"}   
-        
+        return {"status": "ok"}

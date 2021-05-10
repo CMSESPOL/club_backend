@@ -6,6 +6,7 @@ from .models import *
 from .serializers import *
 from django.contrib.auth import login
 from user.auth.BearerAuthentication import BearerAuthentication
+from rest_framework import exceptions
 
 from rest_framework.views import APIView
 from rest_framework import permissions
@@ -110,6 +111,15 @@ class PersonView(APIView):
     # permission_classes = [permissions.IsAuthenticated]
 
     person_service = PersonService()
+
+    def get(self, request):
+        id = request.GET.get("id")
+        role = request.GET.get("role")
+        if not id:
+            raise exceptions.ValidationError(detail="El parametro id es requerido")
+        if not role:
+            raise exceptions.ValidationError(detail="El parametro role es requerido")
+        return Response(data=self.person_service.get_by_id(id, role))
 
     def post(self, request):
         return Response(data=self.person_service.create(request.data))

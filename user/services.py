@@ -8,6 +8,37 @@ class PersonService:
 
     roles = [i[0] for i in ROLES]
 
+    def get_by_id(self, id, role):
+        if role not in self.roles:
+            raise exceptions.ValidationError(detail="Role don't exist")
+
+        if role == 'E':
+            try:
+                person = Person.objects.get(card_id=id)
+            except Person.DoesNotExist:
+                raise exceptions.ValidationError(
+                    detail=f"Person with id {id} don't exist")
+            return PersonSerializer(person).data
+
+        elif role == 'T':
+            try:
+                professor = Professor.objects.prefetch_related(
+                    "id_faculty").get(pk=id)
+            except Professor.DoesNotExist:
+                raise exceptions.ValidationError(
+                    detail=f"Professor with id {id} don't exist")
+
+            return ProfessorManagerSerializer(professor).data
+
+        elif role not in ('A', 'T', 'E'):
+            try:
+                student = Student.objects.prefetch_related(
+                    "id_faculty").prefetch_related("id_career").get(pk=id)
+            except Student.DoesNotExist:
+                raise exceptions.ValidationError(
+                    detail=f"Student with id {id} don't exist")
+            return StudentManagerSerializer(student).data
+
     def create(self, data: dict):
         role = data.get("role")
         if not role:

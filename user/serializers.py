@@ -1,4 +1,5 @@
 from institution.models import Career, Faculty, SubOrganization
+from institution.serializers import CareerSerializer, FacultySerializer
 from rest_framework import exceptions, serializers
 from .models import *
 
@@ -64,6 +65,8 @@ class PersonManagerSerializer(serializers.ModelSerializer):
 
 class ProfessorManagerSerializer(serializers.ModelSerializer):
 
+    faculty = FacultySerializer(read_only=True, source="id_faculty")
+    
     id_faculty = serializers.CharField(
         max_length=6, source="id_faculty.acronym")
     id_person = PersonManagerSerializer()
@@ -71,6 +74,7 @@ class ProfessorManagerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professor
         fields = [
+            'faculty',
             'id_person',
             'id_faculty'
         ]
@@ -104,6 +108,9 @@ class ProfessorManagerSerializer(serializers.ModelSerializer):
 
 class StudentManagerSerializer(serializers.ModelSerializer):
 
+    faculty = FacultySerializer(read_only=True, source="id_faculty")
+    career = CareerSerializer(read_only=True, source="id_career")
+    
     id_faculty = serializers.CharField(
         max_length=6, source="id_faculty.acronym")
     id_career = serializers.CharField(max_length=38, source="id_career.name")
@@ -112,6 +119,8 @@ class StudentManagerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = [
+            'faculty',
+            'career',
             'enrollment_id',
             'id_faculty',
             'id_career',

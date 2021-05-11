@@ -10,6 +10,7 @@ urlpatterns = [
     path('evento/', EventList.as_view()),
     path('evento/<int:pk>/', EventDetail.as_view()),
     path('eventoOrdenado/<str:order>/', EventOrderedList.as_view()),
+    path('eventoTipo/<str:event_type>/', EventByTypeList.as_view()),
     path('documento/', DocumentList.as_view()),
     path('facultad/', FacultyList.as_view()),
     path('carrera/', CareerList.as_view()),

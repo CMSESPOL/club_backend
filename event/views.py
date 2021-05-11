@@ -41,6 +41,21 @@ class EventOrderedList(APIView):
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
+class EventByTypeList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_Bytype_objects(self, event_type):
+        try:
+            return Event.objects.filter(event_type=event_type)
+ 
+        except Event.DoesNotExist:
+            raise Http404
+
+    def get(self, request, event_type, format=None):
+        events = self.get_Bytype_objects(event_type)
+        serializer = EventSerializer(events, many=True)
+        return Response(serializer.data)
+
 class EventDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
 

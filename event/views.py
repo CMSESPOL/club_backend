@@ -23,6 +23,24 @@ class EventList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class EventOrderedList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_order_objects(self, order):
+        try:
+            if(order=='dsc'):
+                return Event.objects.order_by('-date_start')
+            else:
+                return Event.objects.order_by('date_start')
+ 
+        except Event.DoesNotExist:
+            raise Http404
+
+    def get(self, request, order, format=None):
+        events = self.get_order_objects(order)
+        serializer = EventSerializer(events, many=True)
+        return Response(serializer.data)
+
 class EventDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
 

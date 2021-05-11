@@ -1,6 +1,8 @@
 
+from institution.serializers import OrganizationSerializer
+from institution.models import Organization
 from user.serializers import PersonManagerSerializer, PersonSerializer, ProfessorManagerSerializer, ProfessorSerializer, StudentManagerSerializer, StudentSerializer
-from user.models import Person, Professor, ROLES, Student
+from user.models import Member, Person, Professor, ROLES, Student
 from rest_framework import exceptions
 
 
@@ -146,3 +148,7 @@ class PersonService:
                     detail=f"Student with id {id} don't exist")
             student.delete()
         return {"status": "ok"}
+    
+    def get_organization(self, member: Member):
+        serializer = OrganizationSerializer(member.id_sub_org.id_organization)
+        return serializer.data

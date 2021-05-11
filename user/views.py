@@ -1,4 +1,4 @@
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from user.services import PersonService
 from user.auth.services import AuthService
 from django.shortcuts import render
@@ -12,9 +12,11 @@ from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 
 auth_service = AuthService()
+person_service = PersonService()
 
 class PersonList(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -108,9 +110,7 @@ class AuthCookie(APIView):
 
 class PersonView(APIView):
 
-    # permission_classes = [permissions.IsAuthenticated]
-
-    person_service = PersonService()
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         id = request.GET.get("id")
@@ -119,13 +119,20 @@ class PersonView(APIView):
             raise exceptions.ValidationError(detail="El parametro id es requerido")
         if not role:
             raise exceptions.ValidationError(detail="El parametro role es requerido")
-        return Response(data=self.person_service.get_by_id(id, role))
+        return Response(data=person_service.get_by_id(id, role))
 
     def post(self, request):
         return Response(data=self.person_service.create(request.data))
     
     def put(self, request):
-        return Response(data=self.person_service.update(request.data))
+        return Response(data=person_service.update(request.data))
     
     def delete(self, request):
-        return Response(data=self.person_service.delete(request.data))
+        return Response(data=person_service.delete(request.data))
+
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication, SessionAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_member_organization(request):
+    member = request.user
+    return Response(data=person_service.get_organization(member))

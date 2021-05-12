@@ -15,6 +15,7 @@ urlpatterns = [
     path('facultad/', FacultyList.as_view()),
     path('carrera/', CareerList.as_view()),
     path('organizacion/', OrganizationList.as_view()),
+    path('organizacion/<str:pk>/', OrganizationDetail.as_view()),
     path('suborganizacion/', SubOrganizationList.as_view()),
     path('persona/', PersonList.as_view()),
     path('persona/manager/', PersonView.as_view()),

@@ -18,8 +18,8 @@ class Career(models.Model):
         return self.name
 
 class Organization(models.Model):
-    abbreviation = models.CharField(max_length=10,primary_key=True)
-    name = models.CharField(max_length=38)
+    abbreviation = models.CharField(max_length=10, primary_key=True)
+    name = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
     mission = models.CharField(max_length=500, default='')
     vision = models.CharField(max_length=500, default='')

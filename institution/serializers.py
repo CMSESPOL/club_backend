@@ -19,4 +19,4 @@ class OrganizationSerializer(serializers.ModelSerializer):
 class SubOrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubOrganization
-        fields = ['name', 'description', 'id_organization']
+        fields = '__all__'

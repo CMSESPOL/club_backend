@@ -1,4 +1,4 @@
-from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 from user.services import PersonService
 from user.auth.services import AuthService
 from django.shortcuts import render
@@ -131,7 +131,7 @@ class PersonView(APIView):
         return Response(data=person_service.delete(request.data))
 
 @api_view(["POST"])
-@authentication_classes([TokenAuthentication, SessionAuthentication])
+@authentication_classes([BearerAuthentication, SessionAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def get_member_organization(request):
     member = request.user

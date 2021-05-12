@@ -53,7 +53,7 @@ class Person(models.Model):
 
 class Professor(models.Model):
     id_person = models.OneToOneField('Person', on_delete=models.CASCADE)
-    id_faculty = models.OneToOneField('institution.Faculty', on_delete=models.CASCADE, null=True)
+    id_faculty = models.ForeignKey('institution.Faculty', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"{self.id_person}"
@@ -65,8 +65,8 @@ class Professor(models.Model):
 
 class Student(models.Model):
     enrollment_id = models.CharField(max_length=9, primary_key=True)
-    id_faculty = models.OneToOneField('institution.Faculty', on_delete=models.CASCADE, null=True)
-    id_career = models.OneToOneField('institution.Career', on_delete=models.CASCADE, null=True)
+    id_faculty = models.ForeignKey('institution.Faculty', on_delete=models.CASCADE, null=True)
+    id_career = models.ForeignKey('institution.Career', on_delete=models.CASCADE, null=True)
     level = models.CharField(max_length=6, choices=LEVELS)
     photo = models.CharField(max_length=100, blank=True, null=True)
     id_person = models.OneToOneField('Person', on_delete=models.CASCADE)

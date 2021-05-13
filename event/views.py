@@ -97,3 +97,34 @@ class DocumentList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class DocumentCrud(view):
+permission_classes = [permissions.IsAuthenticated]
+
+    def DocumentViewList(self,request,pk):
+        docs = Document.objects.get(id=pk)
+        serializer= DocumentSerializer(docs,many=False)
+        return Response(serializer.data)
+
+    def DocumentDetail(self,request,pk):
+        doc=Document.objects.get(id=pk)
+        serializer=DocumentSerializer(doc,many=False)
+        return Response(serializer.data)
+        
+    def DocumentCreate(self,request):
+        serializer=DocumentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+
+    def DocumentUpdate(self,request,pk):
+        doc=Document.objects.get(id=pk)
+        serializer=DocumentSerializer(instance=doc,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+
+    def DocumentDelete(self,request,pk):
+        doc=Document.objects.get(id=pk)
+        doc.delete()
+        return Response("Eliminado")

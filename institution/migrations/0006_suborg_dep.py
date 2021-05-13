@@ -23,9 +23,4 @@ class Migration(migrations.Migration):
             name='name',
             field=models.CharField(max_length=50),
         ),
-        migrations.AlterField(
-            model_name='suborganization',
-            name='sub_org_id',
-            field=models.AutoField(primary_key=True, serialize=False),
-        ),
     ]

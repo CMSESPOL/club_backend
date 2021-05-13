@@ -98,8 +98,8 @@ class DocumentList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-class DocumentCrud(view):
-permission_classes = [permissions.IsAuthenticated]
+class DocumentCrud(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def DocumentViewList(self,request,pk):
         docs = Document.objects.get(id=pk)

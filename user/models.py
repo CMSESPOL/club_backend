@@ -47,6 +47,7 @@ class Person(models.Model):
     born_date = models.DateField(auto_now=False)
     genre = models.CharField(max_length=1, choices=GENRES)
     signature = models.CharField(max_length=100, blank=True, null=True)
+    actual_role = models.OneToOneField('MemberRole', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return f"{self.card_id}"
@@ -54,9 +55,10 @@ class Person(models.Model):
 class Professor(models.Model):
     id_person = models.OneToOneField('Person', on_delete=models.CASCADE)
     id_faculty = models.ForeignKey('institution.Faculty', on_delete=models.CASCADE, null=True)
+    id_member = models.OneToOneField('Member', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.id_person}"
+        return f"{self.id_member.get_full_name()}"
 
     @property
     def person(self):
@@ -70,9 +72,10 @@ class Student(models.Model):
     level = models.CharField(max_length=6, choices=LEVELS)
     photo = models.CharField(max_length=100, blank=True, null=True)
     id_person = models.OneToOneField('Person', on_delete=models.CASCADE)
+    id_member = models.OneToOneField('Member', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.enrollment_id}"
+        return f"{self.id_member.get_full_name()}"
 
     @property
     def person(self):
@@ -80,10 +83,8 @@ class Student(models.Model):
         return PersonSerializer(self.id_person).data
     
 class Member(AbstractUser):
-    id_student = models.OneToOneField('Student', on_delete=models.CASCADE, blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
     date_joined = models.DateField(auto_now=True)
-    actual_role = models.OneToOneField('MemberRole', on_delete=models.CASCADE, blank=True, null=True)
     permissions = models.CharField(max_length=1, choices=PERMISSIONS, default='N')
     ambassador = models.URLField(max_length=300, blank=True, null=True, unique=True, validators=[ambassador_valid_url])
     social_links = models.JSONField(default=dict, blank=True, null=True)
@@ -111,14 +112,14 @@ class MemberRole(models.Model):
     def __str__(self):
         return f"{self.id_member} {self.name}"
     
-    def save(self, *args, **kwargs):
-        try:
-            member = Member.objects.get(id=self.id_member.id)
-            if member:
-                member.actual_role = self
-                super().save(*args, **kwargs)
-                member.save()
-            else: 
-                raise Exception("Error al tratar de asignar el rol actual.")
-        except Exception as e:
-            return f"{e}"
+    # def save(self, *args, **kwargs):
+    #     try:
+    #         member = Member.objects.get(id=self.id_member.id)
+    #         if member:
+    #             member.actual_role = self
+    #             super().save(*args, **kwargs) #Primero el super
+    #             member.save()
+    #         else: 
+    #             raise Exception("Error al tratar de asignar el rol actual.")
+    #     except Exception as e:
+    #         return f"{e}"

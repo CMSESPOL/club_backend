@@ -42,12 +42,12 @@ class EventDetail(APIView):
         try:
             if(order=='dsc'):
                 return Event.objects.order_by('-date_start')
-            else:
+            if(order=='asc'):
                 return Event.objects.order_by('date_start')
         except Event.DoesNotExist:
             raise Http404
  
-    def get(self, request, pk=None, order=None, id_organization=None, event_type=none, format=None):
+    def get(self, request, pk=None, order=None, id_organization=None, event_type=None, format=None):
        
         if pk:
             event = self.get_object(pk)

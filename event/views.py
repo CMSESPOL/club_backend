@@ -79,8 +79,8 @@ class DocumentList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        queryset = Document.objects.all()
-        serializer = DocumentSerializer(queryset, many=True)
+        docs = Document.objects.all()
+        serializer = DocumentSerializer(docs, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -89,34 +89,43 @@ class DocumentList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-class DocumentCrud(APIView):
+
+class DocumentDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def DocumentViewList(self,request,pk):
-        docs = Document.objects.get(id=pk)
-        serializer= DocumentSerializer(docs,many=False)
+    def get_object(self, pk):
+        try:
+            return Document.objects.get(pk=pk)
+        except Document.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk=None, order=None,format=None):
+        if pk:
+            docs = self.get_object(pk)
+            serializer = DocumentSerializer(docs)
+        if order:
+            events = self.get_by_order(order)
+            serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
-    def DocumentDetail(self,request,pk):
-        doc=Document.objects.get(id=pk)
-        serializer=DocumentSerializer(doc,many=False)
-        return Response(serializer.data)
-        
-    def DocumentCreate(self,request):
-        serializer=DocumentSerializer(data=request.data)
+    def get_by_order(self, order):
+        try:
+            if(order=='dsc'):
+                return Document.objects.order_by('-name')
+            if(order=='asc'):
+                return Document.objects.order_by('name')
+        except Event.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk, format=None):
+        docs = self.get_object(pk)
+        serializer = DocumentSerializer(docs, data=request.data)
         if serializer.is_valid():
             serializer.save()
-        return Response(serializer.data)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def DocumentUpdate(self,request,pk):
-        doc=Document.objects.get(id=pk)
-        serializer=DocumentSerializer(instance=doc,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-        return Response(serializer.data)
-
-    def DocumentDelete(self,request,pk):
-        doc=Document.objects.get(id=pk)
-        doc.delete()
-        return Response("Eliminado")
+    def delete(self, request, pk, format=None):
+        docs = self.get_object(pk)
+        docs.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

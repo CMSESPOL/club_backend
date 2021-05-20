@@ -27,6 +27,8 @@ urlpatterns = [
     path('rol/', MemberRoleList.as_view()),
     path('auth/login/', AuthToken.as_view()),
     path('auth/login/web/', AuthCookie.as_view()),
+    path('documentos/',DocumentList.as_view()),
+    path('documentos/<str:document_id>/',DocumentView.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

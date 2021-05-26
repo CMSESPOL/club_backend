@@ -99,6 +99,15 @@ class DocumentDetail(APIView):
         except Document.DoesNotExist:
             raise Http404
 
+    def get_by_order(self, order):
+        try:
+            if(order=='dsc'):
+                return Document.objects.order_by('-name')
+            if(order=='asc'):
+                return Document.objects.order_by('name')
+        except Event.DoesNotExist:
+            raise Http404
+
     def get(self, request, pk=None, order=None,format=None):
         if pk:
             docs = self.get_object(pk)
@@ -108,14 +117,6 @@ class DocumentDetail(APIView):
             serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
-    def get_by_order(self, order):
-        try:
-            if(order=='dsc'):
-                return Document.objects.order_by('-name')
-            if(order=='asc'):
-                return Document.objects.order_by('name')
-        except Event.DoesNotExist:
-            raise Http404
 
     def put(self, request, pk, format=None):
         docs = self.get_object(pk)

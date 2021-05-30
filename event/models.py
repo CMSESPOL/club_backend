@@ -1,26 +1,28 @@
 from django.db import models
 
 EVENT_TYPES = [
-    ('A', 'Asamblea'),
+    ('A0', 'Asamblea'),
+    ('A1', 'Admisión de Aspirantes'),
+    ('C0', 'Cumpleaños'),
     ('C1', 'Charla'),
     ('C2', 'Conferencia'),
     ('C3', 'Convenio'),
-    ('N', 'Novatada'),
-    ('P', 'Proyecto'),
-    ('R', 'Reunión'),
+    ('N0', 'Novatada'),
+    ('P0', 'Proyecto'),
+    ('R0', 'Reunión'),   
 ]
 
 DOC_TYPES = [
     ('C1', 'Carta'),
     ('C2', 'Constitución'),
     ('C3', 'Convenio'),
-    ('E', 'Evidenia de reunión'),
-    ('P', 'Propuesta de proyecto'),
-    ('S', 'Solicitud'),
+    ('E0', 'Evidenia de reunión'),
+    ('P0', 'Propuesta de proyecto'),
+    ('S0', 'Solicitud'),
 ]
 
 class Event(models.Model):
-    event_id = models.IntegerField(primary_key=True)
+    event_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=38)
     description = models.CharField(max_length=100)
     event_type = models.CharField(max_length=2, choices=EVENT_TYPES)

@@ -37,6 +37,7 @@ class SubOrganization(models.Model):
     id_organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
     id_member_in_charge = models.ForeignKey('user.Member', on_delete=models.CASCADE, blank=True, null=True)
     gallery = models.JSONField(default=dict)
+    members = models.ManyToManyField('user.Member', related_name="list_of_branch_members")
 
     def __str__(self):
         return f"{self.id_organization.abbreviation} {self.name}"

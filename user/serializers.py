@@ -42,23 +42,30 @@ class PersonManagerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = ['card_id', 'born_date', 'genre', 'signature']
+        fields = [
+            'card_id',
+            'first_name',
+            'last_name',
+            'born_date',
+            'genre',
+            'signature'
+        ]
 
     def create(self, validated_data):
         person = Person(**validated_data)
         try:
             person.save()
-        except:
+        except Exception as e:
             raise exceptions.APIException()
         return person
 
     def update(self, instance, validated_data):
-        instance.card_id = validated_data.get("card_id", instance.card_id)
-        instance.born_date = validated_data.get(
-            "born_date", instance.born_date)
-        instance.genre = validated_data.get("genre", instance.genre)
-        instance.signature = validated_data.get(
-            "signature", instance.signature)
+        instance.card_id = validated_data.get('card_id', instance.card_id)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.born_date = validated_data.get('born_date', instance.born_date)
+        instance.genre = validated_data.get('genre', instance.genre)
+        instance.signature = validated_data.get('signature', instance.signature)
         instance.save()
         return instance
 

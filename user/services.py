@@ -52,8 +52,8 @@ class PersonService:
             data.pop("role")
             serializer = PersonManagerSerializer(data=data)
             if serializer.is_valid(raise_exception=True):
-                person = serializer.save()
-                return PersonSerializer(person).data
+                person = serializer.save(actual_role=role)
+                return PersonManagerSerializer(person).data
         elif role == 'T':
             data.pop("role")
             serializer = ProfessorManagerSerializer(data=data)
@@ -148,7 +148,7 @@ class PersonService:
                     detail=f"Student with id {id} don't exist")
             student.delete()
         return {"status": "ok"}
-    
+
     def get_organization(self, member: Member):
         serializer = OrganizationSerializer(member.id_sub_org.id_organization)
         return serializer.data

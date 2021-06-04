@@ -110,7 +110,7 @@ class AuthCookie(APIView):
 
 class PersonView(APIView):
 
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         id = request.GET.get("id")
@@ -122,7 +122,7 @@ class PersonView(APIView):
         return Response(data=person_service.get_by_id(id, role))
 
     def post(self, request):
-        return Response(data=self.person_service.create(request.data))
+        return Response(data=person_service.create(request.data))
     
     def put(self, request):
         return Response(data=person_service.update(request.data))

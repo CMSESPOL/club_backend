@@ -1,6 +1,5 @@
 
 from institution.serializers import OrganizationSerializer
-from institution.models import Organization
 from user.serializers import PersonManagerSerializer, PersonSerializer, ProfessorManagerSerializer, ProfessorSerializer, StudentManagerSerializer, StudentSerializer
 from user.models import Member, Person, Professor, ROLES, Student
 from rest_framework import exceptions
@@ -10,32 +9,26 @@ class PersonService:
 
     roles = [i[0] for i in ROLES]
 
-    def get_by_id(self, id, role):
-        if role not in self.roles:
-            raise exceptions.ValidationError(detail="Role don't exist")
-
-        if role == 'E':
-            try:
-                person = Person.objects.get(card_id=id)
-            except Person.DoesNotExist:
-                raise exceptions.ValidationError(
+    def get_by_id(self, id):
+        try:
+            person = Person.objects.get(card_id=id)
+        except Person.DoesNotExist:
+            raise exceptions.ValidationError(
                     detail=f"Person with id {id} don't exist")
-            return PersonSerializer(person).data
-
-        elif role == 'T':
+        if person.actual_role == 'E':
+            return PersonManagerSerializer(person).data
+        elif person.actual_role == 'T':
             try:
                 professor = Professor.objects.prefetch_related(
-                    "id_faculty").get(pk=id)
+                    "id_faculty").get(card_id=id)
             except Professor.DoesNotExist:
                 raise exceptions.ValidationError(
                     detail=f"Professor with id {id} don't exist")
-
             return ProfessorManagerSerializer(professor).data
-
-        elif role not in ('A', 'T', 'E'):
+        elif person.actual_role not in ('A', 'T', 'E'):
             try:
                 student = Student.objects.prefetch_related(
-                    "id_faculty").prefetch_related("id_career").get(pk=id)
+                    "id_faculty").prefetch_related("id_career").get(card_id=id)
             except Student.DoesNotExist:
                 raise exceptions.ValidationError(
                     detail=f"Student with id {id} don't exist")
@@ -58,42 +51,35 @@ class PersonService:
             data.pop("role")
             serializer = ProfessorManagerSerializer(data=data)
             if serializer.is_valid(raise_exception=True):
-                professor = serializer.save()
-                return ProfessorSerializer(professor).data
+                professor = serializer.save(actual_role=role)
+                return ProfessorManagerSerializer(professor).data
         elif role not in ('A', 'T', 'E'):
             serializer = StudentManagerSerializer(data=data)
             if serializer.is_valid(raise_exception=True):
-                student = serializer.save()
-                return StudentSerializer(student).data
+                student = serializer.save(actual_role=role)
+                return StudentManagerSerializer(student).data
 
         raise exceptions.ValidationError(detail="This action is not allowed")
 
     def update(self, data: dict):
-        id = data.pop("id", None)
+        id = data.get("card_id", None)
         if not id:
-            raise exceptions.ValidationError(detail="Id is required")
-        role = data.get("role")
-        if not role:
-            raise exceptions.ValidationError(detail="Role is required")
-        if role not in self.roles:
-            raise exceptions.ValidationError(detail="Role don't exist")
+            raise exceptions.ValidationError(detail="card id is required")
+        try:
+            person = Person.objects.get(card_id=id)
+        except Person.DoesNotExist:
+            raise exceptions.ValidationError(
+                detail=f"Person with id {id} don't exist")
 
-        if role == 'E':
-            data.pop("role")
-            try:
-                person = Person.objects.get(card_id=id)
-            except Person.DoesNotExist:
-                raise exceptions.ValidationError(
-                    detail=f"Person with id {id} don't exist")
+        if person.actual_role == 'E':
             serializer = PersonManagerSerializer(person, data=data)
             if serializer.is_valid(raise_exception=True):
                 person = serializer.save()
                 return PersonSerializer(person).data
 
-        elif role == 'T':
-            data.pop("role")
+        elif person.actual_role == 'T':
             try:
-                professor = Professor.objects.get(pk=id)
+                professor = Professor.objects.get(card_id=id)
             except Professor.DoesNotExist:
                 raise exceptions.ValidationError(
                     detail=f"Professor with id {id} don't exist")
@@ -102,9 +88,9 @@ class PersonService:
                 professor = serializer.save()
                 return ProfessorSerializer(professor).data
 
-        elif role not in ('A', 'T', 'E'):
+        elif person.actual_role not in ('A', 'T', 'E'):
             try:
-                student = Student.objects.get(pk=id)
+                student = Student.objects.get(card_id=id)
             except Student.DoesNotExist:
                 raise exceptions.ValidationError(
                     detail=f"Student with id {id} don't exist")
@@ -114,35 +100,30 @@ class PersonService:
                 return StudentSerializer(student).data
         raise exceptions.ValidationError(detail="This action is not allowed")
 
-    def delete(self, data: dict):
-        id = data.pop("id")
+    def delete(self, id):
         if not id:
             raise exceptions.ValidationError(detail="Id is required")
-        role = data.get("role")
-        if not role:
-            raise exceptions.ValidationError(detail="Role is required")
-        if role not in self.roles:
-            raise exceptions.ValidationError(detail="Role don't exist")
+        
+        try:
+            person = Person.objects.get(card_id=id)
+        except Person.DoesNotExist:
+            raise exceptions.ValidationError(
+                detail=f"Person with id {id} don't exist")
 
-        if role == 'E':
-            try:
-                person = Person.objects.get(card_id=id)
-            except Person.DoesNotExist:
-                raise exceptions.ValidationError(
-                    detail=f"Person with id {id} don't exist")
+        if person.actual_role == 'E':
             person.delete()
 
-        elif role == 'T':
+        elif person.actual_role == 'T':
             try:
-                professor = Professor.objects.get(pk=id)
+                professor = Professor.objects.get(card_id=id)
             except Professor.DoesNotExist:
                 raise exceptions.ValidationError(
                     detail=f"Professor with id {id} don't exist")
             professor.delete()
 
-        elif role not in ('A', 'T', 'E'):
+        elif person.actual_role not in ('A', 'T', 'E'):
             try:
-                student = Student.objects.get(pk=id)
+                student = Student.objects.get(card_id=id)
             except Student.DoesNotExist:
                 raise exceptions.ValidationError(
                     detail=f"Student with id {id} don't exist")

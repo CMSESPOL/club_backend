@@ -21,6 +21,7 @@ urlpatterns = [
     path('suborganizacion/<str:id_organization>/', SubOrganizationDetail.as_view()),
     path('persona/', PersonList.as_view()),
     path('persona/manager/', PersonView.as_view()),
+    path('persona/manager/<str:pk>/', PersonView.as_view()),
     path('profesor/', ProfessorList.as_view()),
     path('estudiante/', StudentList.as_view()),
     path('miembro/', MemberList.as_view()),

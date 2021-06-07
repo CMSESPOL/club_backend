@@ -112,14 +112,8 @@ class PersonView(APIView):
 
     # permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        id = request.GET.get("id")
-        role = request.GET.get("role")
-        if not id:
-            raise exceptions.ValidationError(detail="El parametro id es requerido")
-        if not role:
-            raise exceptions.ValidationError(detail="El parametro role es requerido")
-        return Response(data=person_service.get_by_id(id, role))
+    def get(self, request, pk):
+        return Response(data=person_service.get_by_id(pk))
 
     def post(self, request):
         return Response(data=person_service.create(request.data))
@@ -127,8 +121,8 @@ class PersonView(APIView):
     def put(self, request):
         return Response(data=person_service.update(request.data))
     
-    def delete(self, request):
-        return Response(data=person_service.delete(request.data))
+    def delete(self, request, pk):
+        return Response(data=person_service.delete(pk))
 
 @api_view(["POST"])
 @authentication_classes([BearerAuthentication, SessionAuthentication])

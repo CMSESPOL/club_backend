@@ -70,7 +70,7 @@ class Professor(Person):
         return f"{self.first_name}"
 
 class Student(Person):
-    enrollment_id = models.CharField(max_length=9, primary_key=True)
+    enrollment_id = models.CharField(max_length=9, unique=True)
     id_career = models.ForeignKey('institution.Career', on_delete=models.CASCADE, null=True)
     level = models.CharField(max_length=6, choices=LEVELS)
     photo = models.CharField(max_length=100, blank=True, null=True)

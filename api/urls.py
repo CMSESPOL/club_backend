@@ -1,15 +1,14 @@
-from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
+from event.views import *
 from institution.views import *
-
-router = routers.DefaultRouter()
-router.register(r'facultades', FacultyViewSet)
-router.register(r'carreras', CareerViewSet)
-router.register(r'organizacion', OrganizationViewSet)
-router.register(r'suborganizacion', SubOrganizationViewSet)
-
+from user.views import *
+from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include('api.routers')),
+    path('organizacion/<str:pk>/miembros', AllMembersByOrgViewSet.as_view({'get': 'retrive'})),
+    path('auth/login/', AuthToken.as_view()),
+    path('auth/login/web/', AuthCookie.as_view()),
 ]
+
+ 

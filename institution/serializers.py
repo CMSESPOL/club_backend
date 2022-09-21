@@ -14,9 +14,15 @@ class CareerSerializer(serializers.ModelSerializer):
 class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
-        fields = ['name']
+        fields = '__all__'
 
 class SubOrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubOrganization
-        fields = ['name']
+        fields = '__all__'
+
+
+class AllMembersByOrgSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=SubOrganization
+        fields=['sub_org_id','name','members']

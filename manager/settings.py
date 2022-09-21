@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
+    'corsheaders',
 
     'rest_framework',
     'api.apps.ApiConfig',
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -73,15 +76,15 @@ DATABASES = {
         'NAME': os.getenv('DB_LOCAL_NAME'),
         'USER': os.getenv('DB_LOCAL_USER'),                     
         'PASSWORD': os.getenv('DB_LOCAL_PASSWORD')
-    },
-    os.getenv('DB_PROD_SV'): {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST': os.getenv('DB_PROD_HOST'),                     
-        'PORT': os.getenv('DB_PROD_PORT'),
-        'NAME': os.getenv('DB_PROD_NAME'),
-        'USER': os.getenv('DB_PROD_USER'),                     
-        'PASSWORD': os.getenv('DB_PROD_PASSWORD')
-    }
+    } #,
+    # os.getenv('DB_PROD_SV'): {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'HOST': os.getenv('DB_PROD_HOST'),                     
+    #     'PORT': os.getenv('DB_PROD_PORT'),
+    #     'NAME': os.getenv('DB_PROD_NAME'),
+    #     'USER': os.getenv('DB_PROD_USER'),                     
+    #     'PASSWORD': os.getenv('DB_PROD_PASSWORD')
+    # }
 }
 
 AUTH_USER_MODEL = 'user.Member'
@@ -116,3 +119,19 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ]
+}
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:4200',
+)

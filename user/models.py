@@ -45,7 +45,7 @@ PERMISSIONS = [
 ]
 
 class Person(models.Model):
-    card_id = models.CharField(max_length=10, primary_key=True)
+    card_id = models.CharField(max_length=10, primary_key=True, editable=False)
     first_name = models.CharField(('first name'), max_length=150, blank=True)
     last_name = models.CharField(('last name'), max_length=150, blank=True)
     born_date = models.DateField(auto_now=False)
@@ -74,7 +74,7 @@ class Student(Person):
     id_career = models.ForeignKey('institution.Career', on_delete=models.CASCADE, null=True)
     level = models.CharField(max_length=6, choices=LEVELS)
     photo = models.CharField(max_length=100, blank=True, null=True)
-    id_member = models.OneToOneField('Member', on_delete=models.CASCADE, blank=True, null=True)
+    
 
     def __str__(self):
         return f"{self.first_name}"
@@ -86,7 +86,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
     ambassador = models.URLField(max_length=300, blank=True, null=True, unique=True, validators=[ambassador_valid_url])
     social_links = models.JSONField(default=dict, blank=True, null=True)
     active = models.BooleanField(default=True)
-
+    id_student = models.OneToOneField('Student', on_delete=models.CASCADE, blank=True, null=True)
     username_validator = UnicodeUsernameValidator()
 
     username = models.CharField(

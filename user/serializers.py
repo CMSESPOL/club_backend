@@ -26,8 +26,33 @@ class StudentSerializer(serializers.ModelSerializer):
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ['first_name', 'last_name', 'student', 'description',
-                  'date_joined', 'actual_role', 'permissions', 'active', 'id_sub_org']
+        fields = [
+        'username', 
+        'password', 
+        'description', 
+        'ambassador', 
+        'social_links',
+        'email',
+        'id_student'
+        ]
+
+    def create(self, validated_data):
+        passw = validated_data.get('password')
+        member = Member(**validated_data)
+        member.set_password(passw)
+        try:
+            member.save()
+        except Exception as e:
+            raise exceptions.APIException
+        return member
+    
+    def update(self, instance, validated_data):
+        oldp = instance.password
+        update_user = super().update(instance,validated_data)
+        if not (oldp == validated_data['password']):
+            update_user.set_password(validated_data['password'])
+        update_user.save()
+        return update_user
 
 
 class MemberRoleSerializer(serializers.ModelSerializer):
@@ -39,7 +64,7 @@ class MemberRoleSerializer(serializers.ModelSerializer):
 class PersonManagerSerializer(serializers.ModelSerializer):
 
     signature = serializers.CharField(required=False, max_length=100)
-
+    
     class Meta:
         model = Person
         fields = [
@@ -60,14 +85,9 @@ class PersonManagerSerializer(serializers.ModelSerializer):
         return person
 
     def update(self, instance, validated_data):
-        instance.card_id = validated_data.get('card_id', instance.card_id)
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.born_date = validated_data.get('born_date', instance.born_date)
-        instance.genre = validated_data.get('genre', instance.genre)
-        instance.signature = validated_data.get('signature', instance.signature)
-        instance.save()
-        return instance
+        person = super().update(instance,validated_data)
+        person.save()
+        return person
 
 
 class ProfessorManagerSerializer(serializers.ModelSerializer):

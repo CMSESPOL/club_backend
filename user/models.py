@@ -45,7 +45,7 @@ PERMISSIONS = [
 ]
 
 class Person(models.Model):
-    card_id = models.CharField(max_length=10, primary_key=True, editable=False)
+    card_id = models.CharField(max_length=10, primary_key=True)
     first_name = models.CharField(('first name'), max_length=150, blank=True)
     last_name = models.CharField(('last name'), max_length=150, blank=True)
     born_date = models.DateField(auto_now=False)

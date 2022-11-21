@@ -134,3 +134,8 @@ dmypy.json
 
 web.config
 web.config.back
+
+
+#venv
+*.cfg
+Scripts/
